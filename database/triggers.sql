@@ -10,12 +10,14 @@ DELIMITER $$
 -- Fires AFTER an answer row is inserted.
 -- Sets is_correct and marks_awarded automatically.
 -- -----------------------------------------------------------
+DELIMITER $$
+
 CREATE TRIGGER auto_evaluate_answer
-AFTER INSERT ON answers
+BEFORE INSERT ON answers
 FOR EACH ROW
 BEGIN
   DECLARE correct CHAR(1);
-  DECLARE pts     INT;
+  DECLARE pts INT;
 
   SELECT correct_option, marks
     INTO correct, pts
@@ -23,10 +25,11 @@ BEGIN
    WHERE question_id = NEW.question_id;
 
   IF NEW.chosen_option = correct THEN
-    UPDATE answers
-       SET is_correct    = TRUE,
-           marks_awarded = pts
-     WHERE answer_id = NEW.answer_id;
+    SET NEW.is_correct = TRUE;
+    SET NEW.marks_awarded = pts;
+  ELSE
+    SET NEW.is_correct = FALSE;
+    SET NEW.marks_awarded = 0;
   END IF;
 END$$
 
@@ -36,7 +39,7 @@ END$$
 -- Keeps the scores table in sync.
 -- -----------------------------------------------------------
 CREATE TRIGGER update_score_on_answer
-AFTER UPDATE ON answers
+AFTER INSERT ON answers
 FOR EACH ROW
 BEGIN
   DECLARE v_total_score     INT DEFAULT 0;
