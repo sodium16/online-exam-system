@@ -522,8 +522,3 @@ Before deploying to production:
 - [ ] Leaderboards (per-exam + overall)
 - [ ] Reports with charts
 - [ ] README with setup instructions
-
----
-
-**Last updated:** May 2025
-**Version:** 2.0 (with Admin Dashboard & Department Support)
