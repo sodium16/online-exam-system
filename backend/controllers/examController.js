@@ -73,6 +73,11 @@ const submitExam = async (req, res) => {
     const [scoreRows] = await db.query(
       'SELECT * FROM scores WHERE student_id = ? AND exam_id = ?',
       [req.student.student_id, req.params.id]);
+
+    if(!scoreRows.length) {
+      console.error(`ALERT: Answers saved for exam ${req.params.id}, but 'scores' table entry failed to generate.`);
+      return res.status(500).json({message: 'Transaction completed but score calculation record missing.'});
+    }
     res.status(201).json({ message: 'Exam submitted!', score: scoreRows[0] });
   } catch (err) {
     if (err.message.includes('already submitted'))

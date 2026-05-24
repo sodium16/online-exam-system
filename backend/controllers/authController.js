@@ -63,7 +63,6 @@ const login = async (req, res) => {
        WHERE s.email = ? AND s.is_active = TRUE`, [email]);
     if (!rows.length) return res.status(401).json({ message: 'Invalid credentials' });
     const student = rows[0];
-
     if (!(await bcrypt.compare(password, student.password_hash)))
       return res.status(401).json({ message: 'Invalid credentials' });
     const token = signToken({ student_id: student.student_id, email: student.email, full_name: student.full_name, isAdmin: false });

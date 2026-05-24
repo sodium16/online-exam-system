@@ -26,20 +26,20 @@ INSERT IGNORE INTO students (full_name, email, password_hash, roll_number, dept_
   ('Sneha Reddy',   'sneha@example.com',  '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'ME21001', 3, 4),
   ('Vikram Patel',  'vikram@example.com', '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'IT21001', 6, 5);
 
--- CS Exam (dept_id=1) — 5 questions × 10 marks = 50 total (auto-computed by trigger)
+-- CS Exam (dept_id=1) — Always open (starts 1 day ago, ends 30 days from now)
 INSERT INTO exams (title, subject, description, dept_id, pass_percent, duration_min, start_time, end_time) VALUES
   ('DBMS Mid-Term', 'Database Systems', 'Covers SQL, ER Model, Normalization', 1, 40, 60,
-   '2025-06-10 09:00:00', '2025-06-10 10:00:00');
+   DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(NOW(), INTERVAL 30 DAY));
 
 -- EC Exam (dept_id=2)
 INSERT INTO exams (title, subject, description, dept_id, pass_percent, duration_min, start_time, end_time) VALUES
   ('Signals & Systems Quiz', 'Electronics', 'Fourier, Laplace, Z-Transform', 2, 40, 45,
-   '2025-06-12 11:00:00', '2025-06-12 11:45:00');
+   DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(NOW(), INTERVAL 30 DAY));
 
--- Open exam (dept_id = NULL = all departments)
+-- Open exam (dept_id = NULL)
 INSERT INTO exams (title, subject, description, dept_id, pass_percent, duration_min, start_time, end_time) VALUES
   ('Aptitude Test', 'General Aptitude', 'Logical reasoning and quantitative aptitude', NULL, 50, 30,
-   '2025-06-15 14:00:00', '2025-06-15 14:30:00');
+   DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_ADD(NOW(), INTERVAL 30 DAY));
 
 -- Questions for DBMS exam (exam_id=1), 10 marks each → total_marks auto = 50
 INSERT INTO questions (exam_id, question_text, option_a, option_b, option_c, option_d, correct_option, marks, difficulty, topic) VALUES

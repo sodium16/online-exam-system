@@ -6,17 +6,20 @@ export default function Result() {
   const { examId } = useParams();
   const navigate   = useNavigate();
   const [data, setData] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get(`/api/scores/result/${examId}`)
       .then(r => setData(r.data))
-      .catch(() => {})
+      .catch(err => {
+        setError(err.response?.data?.message || 'Failed to communicate with examination server.')
+      })
       .finally(() => setLoading(false));
   }, [examId]);
 
   if (loading) return <div className="loading">Loading result...</div>;
-  if (!data)   return <div className="card" style={{ color: 'var(--red)' }}>Result not found.</div>;
+  if (!data)   return <div className="card" style={{ color: 'var(--red)' }}>{error || 'Result not found.'}</div>;
 
   const { result, breakdown } = data;
   const pct = parseFloat(result.percentage).toFixed(1);

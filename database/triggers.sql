@@ -79,6 +79,52 @@ BEGIN
 END$$
 
 -- -----------------------------------------------------------
+-- TRIGGER 2b: update_score_on_answer_insert
+-- AFTER INSERT on answers — populates scores table upon initial submission
+-- -----------------------------------------------------------
+CREATE TRIGGER update_score_on_answer_insert
+AFTER INSERT ON answers
+FOR EACH ROW
+BEGIN
+  DECLARE v_score       INT     DEFAULT 0;
+  DECLARE v_attempted   INT     DEFAULT 0;
+  DECLARE v_correct     INT     DEFAULT 0;
+  DECLARE v_total_marks INT     DEFAULT 0;
+  DECLARE v_pass_pct    TINYINT DEFAULT 40;
+  DECLARE v_pct         DECIMAL(5,2) DEFAULT 0;
+  DECLARE v_grade       CHAR(2) DEFAULT 'F';
+  DECLARE v_passed      BOOLEAN DEFAULT FALSE;
+
+  SELECT COALESCE(SUM(marks_awarded),0), COUNT(*), COALESCE(SUM(is_correct),0)
+    INTO v_score, v_attempted, v_correct
+    FROM answers WHERE student_id = NEW.student_id AND exam_id = NEW.exam_id;
+
+  SELECT total_marks, pass_percent INTO v_total_marks, v_pass_pct
+    FROM exams WHERE exam_id = NEW.exam_id;
+
+  IF v_total_marks > 0 THEN
+    SET v_pct = (v_score / v_total_marks) * 100;
+  END IF;
+
+  SET v_grade = CASE
+    WHEN v_pct >= 90 THEN 'A+'
+    WHEN v_pct >= 80 THEN 'A'
+    WHEN v_pct >= 70 THEN 'B'
+    WHEN v_pct >= 60 THEN 'C'
+    WHEN v_pct >= 50 THEN 'D'
+    ELSE 'F'
+  END;
+
+  SET v_passed = (v_pct >= v_pass_pct);
+
+  INSERT INTO scores (student_id, exam_id, total_score, total_attempted, total_correct, percentage, grade, passed)
+  VALUES (NEW.student_id, NEW.exam_id, v_score, v_attempted, v_correct, v_pct, v_grade, v_passed)
+  ON DUPLICATE KEY UPDATE
+    total_score = v_score, total_attempted = v_attempted,
+    total_correct = v_correct, percentage = v_pct, grade = v_grade, passed = v_passed;
+END$$
+
+-- -----------------------------------------------------------
 -- TRIGGER 3: prevent_duplicate_attempt
 -- -----------------------------------------------------------
 CREATE TRIGGER prevent_duplicate_exam_attempt
