@@ -16,15 +16,15 @@ INSERT IGNORE INTO departments (name, code) VALUES
 -- Hash for "Admin@1234" — regenerate with node -e "const b=require('bcryptjs');b.hash('Admin@1234',10).then(console.log)"
 INSERT IGNORE INTO admin (full_name, email, password_hash) VALUES
   ('System Admin', 'admin@examportal.com',
-   '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci');
+   '$2a$10$qAX00aeh4gi/J18U4E7Qve5pIQb6Vaq.J5hPygJcITs/p7LeT/Lcu');
 
 -- Students (password for all: Test@1234)
 INSERT IGNORE INTO students (full_name, email, password_hash, roll_number, dept_id, semester) VALUES
-  ('Arjun Sharma',  'arjun@example.com',  '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'CS21001', 1, 5),
-  ('Priya Nair',    'priya@example.com',  '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'CS21002', 1, 5),
-  ('Rahul Mehta',   'rahul@example.com',  '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'EC21001', 2, 3),
-  ('Sneha Reddy',   'sneha@example.com',  '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'ME21001', 3, 4),
-  ('Vikram Patel',  'vikram@example.com', '$2b$10$Wh4bMkB6vBqN3YlR8ZcGQOW0lK9mXpTfJ1sUeDhAiYvOcRn7gP2Ci', 'IT21001', 6, 5);
+  ('Arjun Sharma',  'arjun@example.com',  '$2a$10$uRR8icyczfn1ni9HAEKxlO9yWQeCUjEshELWX8WcQwO.FZ5XpwFBO', 'CS21001', 1, 5),
+  ('Priya Nair',    'priya@example.com',  '$2a$10$uRR8icyczfn1ni9HAEKxlO9yWQeCUjEshELWX8WcQwO.FZ5XpwFBO', 'CS21002', 1, 5),
+  ('Rahul Mehta',   'rahul@example.com',  '$2a$10$uRR8icyczfn1ni9HAEKxlO9yWQeCUjEshELWX8WcQwO.FZ5XpwFBO', 'EC21001', 2, 3),
+  ('Sneha Reddy',   'sneha@example.com',  '$2a$10$uRR8icyczfn1ni9HAEKxlO9yWQeCUjEshELWX8WcQwO.FZ5XpwFBO', 'ME21001', 3, 4),
+  ('Vikram Patel',  'vikram@example.com', '$2a$10$uRR8icyczfn1ni9HAEKxlO9yWQeCUjEshELWX8WcQwO.FZ5XpwFBO', 'IT21001', 6, 5);
 
 -- CS Exam (dept_id=1) — Always open (starts 1 day ago, ends 30 days from now)
 INSERT INTO exams (title, subject, description, dept_id, pass_percent, duration_min, start_time, end_time) VALUES

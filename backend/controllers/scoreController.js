@@ -56,7 +56,8 @@ const getMyResult = async (req, res) => {
     // Also get per-question breakdown
     const [breakdown] = await db.query(
       `SELECT a.question_id, q.question_text, a.chosen_option,
-              q.correct_option, a.is_correct, a.marks_awarded, q.marks, q.topic
+              q.correct_option, a.is_correct, a.marks_awarded, q.marks, q.topic,
+              q.option_a, q.option_b, q.option_c, q.option_d
        FROM answers a JOIN questions q ON q.question_id = a.question_id
        WHERE a.student_id = ? AND a.exam_id = ?`,
       [req.student.student_id, req.params.examId]

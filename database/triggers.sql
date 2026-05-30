@@ -125,21 +125,6 @@ BEGIN
 END$$
 
 -- -----------------------------------------------------------
--- TRIGGER 3: prevent_duplicate_attempt
--- -----------------------------------------------------------
-CREATE TRIGGER prevent_duplicate_exam_attempt
-BEFORE INSERT ON answers
-FOR EACH ROW
-BEGIN
-  DECLARE cnt INT;
-  SELECT COUNT(*) INTO cnt FROM scores
-   WHERE student_id = NEW.student_id AND exam_id = NEW.exam_id;
-  IF cnt > 0 THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Student has already submitted this exam.';
-  END IF;
-END$$
-
--- -----------------------------------------------------------
 -- TRIGGER 4: recalc_exam_total_marks
 -- AFTER INSERT on questions — auto-updates exams.total_marks
 -- and exams.pass_marks based on pass_percent

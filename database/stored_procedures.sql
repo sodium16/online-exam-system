@@ -60,6 +60,16 @@ BEGIN
   DECLARE arr_len INT;
   DECLARE v_qid INT;
   DECLARE v_opt CHAR(1);
+  DECLARE existing_score INT;
+  
+  -- CHECK IF STUDENT ALREADY SUBMITTED THIS EXAM (BEFORE DOING ANYTHING)
+  SELECT COUNT(*) INTO existing_score FROM scores 
+   WHERE student_id = p_student_id AND exam_id = p_exam_id;
+  
+  IF existing_score > 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Student has already submitted this exam.';
+  END IF;
+  
   SET arr_len = JSON_LENGTH(p_answers);
   START TRANSACTION;
   WHILE i < arr_len DO
